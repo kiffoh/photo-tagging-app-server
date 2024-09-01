@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Icon {
+  id            Int            @id @default(autoincrement())
+  name          String         @unique // e.g., 'parakeet', 'knight'
+  coordinateSets CoordinateSet[]
+}
+
+model CoordinateSet {
+  id        Int     @id @default(autoincrement())
+  iconId    Int
+  icon      Icon    @relation(fields: [iconId], references: [id])
+  minY      Int
+  maxY      Int
+  minX      Int
+  maxX      Int
+  createdAt DateTime @default(now())
+}
+
+
+model HighScores {
+  id  Int @id @default(autoincrement())
+  userName String
+  time_total Int
+  time_mins String
+  time_secs String
+
+  @@index([time_total])
+}
